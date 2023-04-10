@@ -7,7 +7,7 @@ ARG REGCTL_VERSION=0.4.7
 ENV PATH=/opt/bin:$PATH
 
 RUN curl -L https://github.com/regclient/regclient/releases/download/v$REGCTL_VERSION/regctl-linux-${TARGETARCH} > regctl \
-&& curl -L https://github.com/regclient/regclient/releases//download/v$REGCTL_VERSION/metadata.tgz > metadata.tgz \
+&& curl -L https://github.com/regclient/regclient/releases/download/v$REGCTL_VERSION/metadata.tgz > metadata.tgz \
 && tar -xzf metadata.tgz regctl-linux-${TARGETARCH}.pem regctl-linux-${TARGETARCH}.sig \
 && cosign verify-blob \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
