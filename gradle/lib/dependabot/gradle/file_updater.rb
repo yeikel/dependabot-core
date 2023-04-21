@@ -131,6 +131,7 @@ module Dependabot
         updated_file(file: buildfile, content: updated_content)
       end
 
+      # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
       def original_buildfile_declarations(dependency, requirement)
         # This implementation is limited to declarations that appear on a
         # single line.
@@ -150,9 +151,25 @@ module Dependabot
             next false unless line.match?(name_regex)
           end
 
-          line.include?(requirement.fetch(:requirement))
+          if dependency.name.include?(":")
+            group, name = dependency.name.split(":")
+            version = requirement.fetch(:requirement)
+
+            pattern = if line.include?("group")
+                        # rubocop:disable Layout/LineLength
+                        /group\s*[=:]\s*['"]#{group}['"]\s*,\s*name\s*[=:]\s*['"]#{name}['"]\s*,\s*version\s*[=:]\s*['"]#{version}['"]/
+                        # rubocop:enable Layout/LineLength
+                      else
+                        /#{group}:#{name}:#{version}/
+                      end
+
+            pattern.match(line)
+          else
+            line.include?(requirement.fetch(:requirement))
+          end
         end
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
       def evaluate_properties(string, buildfile)
         result = string.dup
