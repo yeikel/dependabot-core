@@ -19,6 +19,8 @@ module Dependabot
       private
 
       def fetch_files
+
+
         fetched_files = []
         fetched_files += correctly_encoded_workflow_files
 

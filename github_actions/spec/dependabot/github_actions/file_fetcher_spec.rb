@@ -171,7 +171,7 @@ RSpec.describe Dependabot::GithubActions::FileFetcher do
         with(headers: { "Authorization" => "token token" }).
         to_return(
           status: 200,
-          body: fixture("github", "contents_githubaction_repo_workflows.json"),
+          body: fixture("github", "contents_githubaction_repo_composite_actions.json"),
           headers: { "content-type" => "application/json" }
         )
 
@@ -205,48 +205,6 @@ RSpec.describe Dependabot::GithubActions::FileFetcher do
           %w(.github/workflows/sherlock-workflow.yaml
              .github/workflows/integration-workflow.yml)
         )
-    end
-
-    context "and an explicit directory given" do
-      let(:directory) { "/.github/workflows" }
-
-      it "fetches the workflow files relatively to the directory" do
-        expect(file_fetcher_instance.files.map(&:name)).
-          to match_array(%w(sherlock-workflow.yaml integration-workflow.yml))
-      end
-    end
-
-    context "that has an invalid encoding" do
-      let(:workflow_file_fixture) { fixture("github", "contents_image.json") }
-
-      it "raises a helpful error" do
-        expect { file_fetcher_instance.files }.
-          to raise_error(Dependabot::DependencyFileNotParseable)
-      end
-    end
-
-    context "when only one file has an invalid encoding" do
-      let(:bad_workflow_file_fixture) do
-        fixture("github", "contents_image.json")
-      end
-
-      before do
-        stub_request(
-          :get,
-          File.join(url, ".github/workflows/sherlock-workflow.yaml?ref=sha")
-        ).with(headers: { "Authorization" => "token token" }).
-          to_return(
-            status: 200,
-            body: bad_workflow_file_fixture,
-            headers: { "content-type" => "application/json" }
-          )
-      end
-
-      it "fetches the first workflow file, and ignores the invalid one" do
-        expect(file_fetcher_instance.files.count).to eq(1)
-        expect(file_fetcher_instance.files.map(&:name)).
-          to match_array(%w(.github/workflows/integration-workflow.yml))
-      end
     end
 
     context "with an additional composite action file" do

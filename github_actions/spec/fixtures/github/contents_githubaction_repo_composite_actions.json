@@ -1,0 +1,18 @@
+[
+  {
+    "name": "actions",
+    "path": ".github/actions",
+    "sha": "56fe59af2369930a62cc5149260e92b5ff9b831f",
+    "size": 0,
+    "url": "https://api.github.com/repos/pyca/cryptography/contents/.github/actions?ref=main",
+    "html_url": "https://github.com/pyca/cryptography/tree/main/.github/actions",
+    "git_url": "https://api.github.com/repos/pyca/cryptography/git/trees/56fe59af2369930a62cc5149260e92b5ff9b831f",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/pyca/cryptography/contents/.github/actions?ref=main",
+      "git": "https://api.github.com/repos/pyca/cryptography/git/trees/56fe59af2369930a62cc5149260e92b5ff9b831f",
+      "html": "https://github.com/pyca/cryptography/tree/main/.github/actions"
+    }
+  }
+]
