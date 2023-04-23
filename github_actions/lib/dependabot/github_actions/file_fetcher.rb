@@ -26,8 +26,6 @@ module Dependabot
               File.join(directory, "<anything>.yml")
             end
 
-          ".github/workflows/*/action.yml"
-
           raise(
             Dependabot::DependencyFileNotFound,
             expected_paths
