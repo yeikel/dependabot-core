@@ -28,7 +28,7 @@ module Dependabot
           expected_paths =
             if directory == "/"
               [File.join(directory, "action.yml"), "/.github/workflows/<anything>.yml",
-               "/.github/workflows/*/action.yml"]
+               "/.github/workflows/<anything>/action.yml"]
             else
               File.join(directory, "<anything>.yml")
             end
