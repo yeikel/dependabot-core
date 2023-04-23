@@ -6,12 +6,6 @@ require "dependabot/file_fetchers/base"
 module Dependabot
   module GithubActions
     class FileFetcher < Dependabot::FileFetchers::Base
-      FILENAME_PATTERN = /^(\.github|action.ya?ml)$/
-
-      def self.required_files_in?(filenames)
-        filenames.any? { |f| f.match?(FILENAME_PATTERN) }
-      end
-
       def self.required_files_message
         "Repo must contain a .github/workflows directory with YAML files or an action.yml file"
       end
