@@ -1,0 +1,1 @@
+FROM registry.myCompany.com/dockerproxy/azul/zulu-openjdk@sha256:59fe77a0432aa1393d3b8c8d0cf39b551c2516e899508fa809346b1fe9966d13 as zulu-amd64

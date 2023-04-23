@@ -516,6 +516,34 @@ RSpec.describe Dependabot::Docker::FileParser do
       end
     end
 
+    context "with a private registry under a custom path" do
+      let(:dockerfile_fixture_name) { "private_registry_with_uri" }
+
+      its(:length) { is_expected.to eq(1) }
+
+      describe "the first dependency" do
+        subject(:dependency) { dependencies.first }
+        let(:expected_requirements) do
+          [{
+            requirement: nil,
+            groups: [],
+            file: "Dockerfile",
+            source: {
+              registry: "registry.myCompany.com/dockerproxy",
+              digest: "18305429afa14ea462f810146ba44d4363ae76e4c8dfc38288cf73aa07485005"
+            }
+          }]
+        end
+
+        it "has the right details" do
+          expect(dependency).to be_a(Dependabot::Dependency)
+          expect(dependency.name).to eq("azul/zulu-openjdk")
+          expect(dependency.version).to eq("59fe77a0432aa1393d3b8c8d0cf39b551c2516e899508fa809346b1fe9966d13")
+          expect(dependency.requirements).to eq(expected_requirements)
+        end
+      end
+    end
+
     context "with a non-standard filename" do
       let(:dockerfile) do
         Dependabot::DependencyFile.new(
