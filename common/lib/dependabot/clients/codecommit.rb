@@ -7,6 +7,8 @@ module Dependabot
     class CodeCommit
       class NotFound < StandardError; end
 
+      MAX_PR_DESCRIPTION_LENGTH = 10_240
+
       #######################
       # Constructor methods #
       #######################

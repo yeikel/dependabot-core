@@ -52,6 +52,12 @@ module Dependabot
 
         create_commit
 
+        if pr_description.length > MAX_PR_DESCRIPTION_LENGTH
+          truncated_msg = (+"...\n\n_Description has been truncated_")
+          truncate_length = MAX_PR_DESCRIPTION_LENGTH - truncated_msg.length
+          pr_description = (pr_description[0..truncate_length] + truncated_msg)
+        end
+
         pull_request = codecommit_client_for_source.create_pull_request(
           pr_name,
           branch_name,
