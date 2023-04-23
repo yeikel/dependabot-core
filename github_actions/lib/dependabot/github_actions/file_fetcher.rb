@@ -21,7 +21,7 @@ module Dependabot
         if incorrectly_encoded_workflow_files.none?
           expected_paths =
             if directory == "/"
-              File.join(directory, "action.yml") + " or /.github/workflows/<anything>.yml"
+              [File.join(directory, "action.yml"), File.join(directory, ".github/workflows/*/action.yml")]
             else
               File.join(directory, "<anything>.yml")
             end
