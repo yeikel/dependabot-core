@@ -278,10 +278,6 @@ jobs:
       run : echo "$test"
       env:
         test:  ${{ fromJSON(needs.changes.outputs) }}
-    - name : Print output  ${{ matrix.suite.name }}
-      run : echo "Raw output $raw"
-      env:
-        raw:  ${{ steps.changes.outputs[matrix.suite.name] }}
     - name: Download CLI and test
       if: steps.changes.outputs[matrix.suite.name] == 'true'
       run: |
