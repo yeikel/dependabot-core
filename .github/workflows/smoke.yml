@@ -275,10 +275,9 @@ jobs:
             - 'npm_and_yarn/**'
 
     - name : Print output
-      run :
-        echo "$test"
+      run : echo "$test"
       env:
-        test: ${{ steps.changes.outputs }}
+        test: steps.changes.outputs[matrix.suite.name]
     - name: Download CLI and test
       if: steps.changes.outputs[matrix.suite.name] == 'true'
       run: |
