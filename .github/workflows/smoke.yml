@@ -274,10 +274,8 @@ jobs:
             - 'updater/**'
             - 'npm_and_yarn/**'
 
-    - name : Print raw output  ${{ matrix.suite.name }}
-      run : echo "$test"
-      env:
-        test:  ${{ fromJSON(steps.changes.outputs) }}
+    - name: Debug - Print steps.changes.outputs
+      run: echo "${{ steps.changes.outputs }}"
     - name: Download CLI and test
       if: steps.changes.outputs[matrix.suite.name] == 'true'
       run: |
