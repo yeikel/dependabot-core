@@ -277,7 +277,7 @@ jobs:
     - name : Print raw output  ${{ matrix.suite.name }}
       run : echo "$test"
       env:
-        test:  ${{ fromJSON(needs.changes.outputs) }}
+        test:  ${{ fromJSON(steps.changes.outputs) }}
     - name: Download CLI and test
       if: steps.changes.outputs[matrix.suite.name] == 'true'
       run: |
