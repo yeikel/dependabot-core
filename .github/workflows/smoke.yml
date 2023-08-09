@@ -274,7 +274,7 @@ jobs:
             - 'updater/**'
             - 'npm_and_yarn/**'
 
-    - name : Print output
+    - name : Print output  ${{ matrix.suite.name }}
       run : echo "$test"
       env:
         test:  ${{ steps.changes.outputs[matrix.suite.name] }}
