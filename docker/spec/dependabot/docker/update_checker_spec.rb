@@ -21,21 +21,21 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
       name: dependency_name,
       version: version,
       requirements: [{
-        requirement: nil,
-        groups: [],
-        file: "Dockerfile",
-        source: source
-      }],
+                       requirement: nil,
+                       groups: [],
+                       file: "Dockerfile",
+                       source: source
+                     }],
       package_manager: "docker"
     )
   end
   let(:credentials) do
     [Dependabot::Credential.new({
-      "type" => "git_source",
-      "host" => "github.com",
-      "username" => "x-access-token",
-      "password" => "token"
-    })]
+                                  "type" => "git_source",
+                                  "host" => "github.com",
+                                  "username" => "x-access-token",
+                                  "password" => "token"
+                                })]
   end
   let(:raise_on_ignored) { false }
   let(:ignored_versions) { [] }
@@ -142,7 +142,7 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
           let(:source) do
             {
               digest: "3ea1ca1aa8483a38081750953ad75046e6cc9f6b86ca97" \
-                      "eba880ebf600d68608"
+                "eba880ebf600d68608"
             }
           end
 
@@ -494,11 +494,11 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
               name: dependency_name,
               version: version,
               requirements: [{
-                requirement: nil,
-                groups: [],
-                file: "Dockerfile",
-                source: { registry: "registry-host.io:5000" }
-              }],
+                               requirement: nil,
+                               groups: [],
+                               file: "Dockerfile",
+                               source: { registry: "registry-host.io:5000" }
+                             }],
               package_manager: "docker"
             )
           end
@@ -744,11 +744,11 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
           name: dependency_name,
           version: version,
           requirements: [{
-            requirement: nil,
-            groups: [],
-            file: "Dockerfile",
-            source: { registry: "registry-host.io:5000" }
-          }],
+                           requirement: nil,
+                           groups: [],
+                           file: "Dockerfile",
+                           source: { registry: "registry-host.io:5000" }
+                         }],
           package_manager: "docker"
         )
       end
@@ -924,8 +924,8 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
           error_class = Dependabot::PrivateSourceAuthenticationFailure
           expect { checker.latest_version }
             .to raise_error(error_class) do |error|
-              expect(error.source).to eq("registry.hub.docker.com")
-            end
+            expect(error.source).to eq("registry.hub.docker.com")
+          end
         end
       end
     end
@@ -1053,12 +1053,12 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
               headers: JSON.parse(pagination_headers)
             )
           last = "ukD72mdD/mC8b5xV3susmJzzaTgp3hKwR9nRUW1yZZ6dLc5kfZtKLT2ICo63" \
-                 "WYvt2jq2VyIS3LWB%2Bo9HjGuiYQ6hARJz1jTFdW4jEMKPIg4kRwXypd7HXj" \
-                 "/SnA9iMm3YvNsd4LmPQrO4fpYZgnZZ8rzIIYqex6%2B3A3/mKcTsNKkKDV9V" \
-                 "R3ic6RJjYFCMOEk5/eqsfLaCDYEbtCNoxE2fBDwlzIl/W14f/F%2Bb%2BtQR" \
-                 "Gh3eUKE9nBJpVvAfibAEs215m4ePJm%2BNuVktVjHOYlRG3U03ekr1T7CPD1" \
-                 "Q%2B65wVYi0y2nCIl1/V40nkgG2WX5viYDxUuk3nEdnf55GUocnt38sDZzqB" \
-                 "nyglM9jvbxBzlO8="
+            "WYvt2jq2VyIS3LWB%2Bo9HjGuiYQ6hARJz1jTFdW4jEMKPIg4kRwXypd7HXj" \
+            "/SnA9iMm3YvNsd4LmPQrO4fpYZgnZZ8rzIIYqex6%2B3A3/mKcTsNKkKDV9V" \
+            "R3ic6RJjYFCMOEk5/eqsfLaCDYEbtCNoxE2fBDwlzIl/W14f/F%2Bb%2BtQR" \
+            "Gh3eUKE9nBJpVvAfibAEs215m4ePJm%2BNuVktVjHOYlRG3U03ekr1T7CPD1" \
+            "Q%2B65wVYi0y2nCIl1/V40nkgG2WX5viYDxUuk3nEdnf55GUocnt38sDZzqB" \
+            "nyglM9jvbxBzlO8="
           stub_request(:get, repo_url + "tags/list?last=#{last}")
             .and_return(
               status: 200,
@@ -1115,11 +1115,11 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
           name: dependency_name,
           version: version,
           requirements: [{
-            requirement: nil,
-            groups: [],
-            file: "Dockerfile",
-            source: { registry: "registry-host.io:5000" }
-          }],
+                           requirement: nil,
+                           groups: [],
+                           file: "Dockerfile",
+                           source: { registry: "registry-host.io:5000" }
+                         }],
           package_manager: "docker"
         )
       end
@@ -1140,24 +1140,24 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
           error_class = Dependabot::PrivateSourceAuthenticationFailure
           expect { checker.latest_version }
             .to raise_error(error_class) do |error|
-              expect(error.source).to eq("registry-host.io:5000")
-            end
+            expect(error.source).to eq("registry-host.io:5000")
+          end
         end
       end
 
       context "with authentication credentials" do
         let(:credentials) do
           [Dependabot::Credential.new({
-            "type" => "git_source",
-            "host" => "github.com",
-            "username" => "x-access-token",
-            "password" => "token"
-          }), Dependabot::Credential.new({
-            "type" => "docker_registry",
-            "registry" => "registry-host.io:5000",
-            "username" => "grey",
-            "password" => "pa55word"
-          })]
+                                        "type" => "git_source",
+                                        "host" => "github.com",
+                                        "username" => "x-access-token",
+                                        "password" => "token"
+                                      }), Dependabot::Credential.new({
+                                                                       "type" => "docker_registry",
+                                                                       "registry" => "registry-host.io:5000",
+                                                                       "username" => "grey",
+                                                                       "password" => "pa55word"
+                                                                     })]
         end
 
         before do
@@ -1171,14 +1171,14 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
         context "when there is no username or password" do
           let(:credentials) do
             [Dependabot::Credential.new({
-              "type" => "git_source",
-              "host" => "github.com",
-              "username" => "x-access-token",
-              "password" => "token"
-            }), Dependabot::Credential.new({
-              "type" => "docker_registry",
-              "registry" => "registry-host.io:5000"
-            })]
+                                          "type" => "git_source",
+                                          "host" => "github.com",
+                                          "username" => "x-access-token",
+                                          "password" => "token"
+                                        }), Dependabot::Credential.new({
+                                                                         "type" => "docker_registry",
+                                                                         "registry" => "registry-host.io:5000"
+                                                                       })]
           end
 
           it { is_expected.to eq("17.10") }
@@ -1193,11 +1193,11 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
           name: dependency_name,
           version: version,
           requirements: [{
-            requirement: nil,
-            groups: [],
-            file: "Dockerfile",
-            source: { tag: "17.10" }
-          }],
+                           requirement: nil,
+                           groups: [],
+                           file: "Dockerfile",
+                           source: { tag: "17.10" }
+                         }],
           package_manager: "docker"
         )
       end
@@ -1206,17 +1206,17 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
       context "with replaces-base set to false" do
         let(:credentials) do
           [Dependabot::Credential.new({
-            "type" => "git_source",
-            "host" => "github.com",
-            "username" => "x-access-token",
-            "password" => "token"
-          }), Dependabot::Credential.new({
-            "type" => "docker_registry",
-            "registry" => "registry-host.io:5000",
-            "username" => "grey",
-            "password" => "pa55word",
-            "replaces-base" => false
-          })]
+                                        "type" => "git_source",
+                                        "host" => "github.com",
+                                        "username" => "x-access-token",
+                                        "password" => "token"
+                                      }), Dependabot::Credential.new({
+                                                                       "type" => "docker_registry",
+                                                                       "registry" => "registry-host.io:5000",
+                                                                       "username" => "grey",
+                                                                       "password" => "pa55word",
+                                                                       "replaces-base" => false
+                                                                     })]
         end
 
         before do
@@ -1231,17 +1231,17 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
       context "with replaces-base set to true and with authentication credentials" do
         let(:credentials) do
           [Dependabot::Credential.new({
-            "type" => "git_source",
-            "host" => "github.com",
-            "username" => "x-access-token",
-            "password" => "token"
-          }), Dependabot::Credential.new({
-            "type" => "docker_registry",
-            "registry" => "registry-host.io:5000",
-            "username" => "grey",
-            "password" => "pa55word",
-            "replaces-base" => true
-          })]
+                                        "type" => "git_source",
+                                        "host" => "github.com",
+                                        "username" => "x-access-token",
+                                        "password" => "token"
+                                      }), Dependabot::Credential.new({
+                                                                       "type" => "docker_registry",
+                                                                       "registry" => "registry-host.io:5000",
+                                                                       "username" => "grey",
+                                                                       "password" => "pa55word",
+                                                                       "replaces-base" => true
+                                                                     })]
         end
 
         before do
@@ -1265,23 +1265,23 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
 
           let(:credentials) do
             [Dependabot::Credential.new({
-              "type" => "git_source",
-              "host" => "github.com",
-              "username" => "x-access-token",
-              "password" => "token"
-            }), Dependabot::Credential.new({
-              "type" => "docker_registry",
-              "registry" => "registry-host.io:5000",
-              "replaces-base" => true
-            })]
+                                          "type" => "git_source",
+                                          "host" => "github.com",
+                                          "username" => "x-access-token",
+                                          "password" => "token"
+                                        }), Dependabot::Credential.new({
+                                                                         "type" => "docker_registry",
+                                                                         "registry" => "registry-host.io:5000",
+                                                                         "replaces-base" => true
+                                                                       })]
           end
 
           it "raises a to PrivateSourceAuthenticationFailure error" do
             error_class = Dependabot::PrivateSourceAuthenticationFailure
             expect { checker.latest_version }
               .to raise_error(error_class) do |error|
-                expect(error.source).to eq("registry-host.io:5000")
-              end
+              expect(error.source).to eq("registry-host.io:5000")
+            end
           end
         end
       end
@@ -1296,15 +1296,15 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
           name: dependency_name,
           version: version,
           requirements: [{
-            requirement: nil,
-            groups: [],
-            file: "Dockerfile",
-            source: {
-              registry: "quay.io",
-              tag: "v1.7.2",
-              digest: "18305429afa14ea462f810146ba44d4363ae76e4c8dfc38288cf73aa07485005"
-            }
-          }],
+                           requirement: nil,
+                           groups: [],
+                           file: "Dockerfile",
+                           source: {
+                             registry: "quay.io",
+                             tag: "v1.7.2",
+                             digest: "18305429afa14ea462f810146ba44d4363ae76e4c8dfc38288cf73aa07485005"
+                           }
+                         }],
           package_manager: "docker"
         )
       end
@@ -1337,13 +1337,13 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
       it "updates the tag" do
         expect(checker.updated_requirements)
           .to eq(
-            [{
-              requirement: nil,
-              groups: [],
-              file: "Dockerfile",
-              source: { tag: "17.10" }
-            }]
-          )
+                [{
+                   requirement: nil,
+                   groups: [],
+                   file: "Dockerfile",
+                   source: { tag: "17.10" }
+                 }]
+              )
       end
     end
 
@@ -1360,16 +1360,16 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
       it "updates the digest" do
         expect(checker.updated_requirements)
           .to eq(
-            [{
-              requirement: nil,
-              groups: [],
-              file: "Dockerfile",
-              source: {
-                digest: "3ea1ca1aa8483a38081750953ad75046e6cc9f6b86" \
-                        "ca97eba880ebf600d68608"
-              }
-            }]
-          )
+                [{
+                   requirement: nil,
+                   groups: [],
+                   file: "Dockerfile",
+                   source: {
+                     digest: "3ea1ca1aa8483a38081750953ad75046e6cc9f6b86" \
+                       "ca97eba880ebf600d68608"
+                   }
+                 }]
+              )
       end
     end
 
@@ -1386,17 +1386,17 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
       it "updates the tag and the digest" do
         expect(checker.updated_requirements)
           .to eq(
-            [{
-              requirement: nil,
-              groups: [],
-              file: "Dockerfile",
-              source: {
-                digest: "3ea1ca1aa8483a38081750953ad75046e6cc9f6b86" \
-                        "ca97eba880ebf600d68608",
-                tag: "17.10"
-              }
-            }]
-          )
+                [{
+                   requirement: nil,
+                   groups: [],
+                   file: "Dockerfile",
+                   source: {
+                     digest: "3ea1ca1aa8483a38081750953ad75046e6cc9f6b86" \
+                       "ca97eba880ebf600d68608",
+                     tag: "17.10"
+                   }
+                 }]
+              )
       end
     end
 
@@ -1416,19 +1416,19 @@ RSpec.describe Dependabot::Docker::UpdateChecker do
       it "updates the tags" do
         expect(checker.updated_requirements)
           .to eq(
-            [{
-              requirement: nil,
-              groups: [],
-              file: "Dockerfile",
-              source: { tag: "trusty-20170817" }
-            },
-             {
-               requirement: nil,
-               groups: [],
-               file: "Dockerfile.other",
-               source: { tag: "xenial-20170915" }
-             }]
-          )
+                [{
+                   requirement: nil,
+                   groups: [],
+                   file: "Dockerfile",
+                   source: { tag: "trusty-20170817" }
+                 },
+                 {
+                   requirement: nil,
+                   groups: [],
+                   file: "Dockerfile.other",
+                   source: { tag: "xenial-20170915" }
+                 }]
+              )
       end
     end
   end
