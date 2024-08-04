@@ -300,13 +300,27 @@ module Dependabot
         "library/#{dependency.name}"
       end
 
+      DEFAULT_OPEN_TIMEOUT_IN_SECONDS = 2
+      DEFAULT_READ_TIMEOUT_IN_SECONDS = 5
+
+      sig { returns(Integer) }
+      def self.open_timeout_in_seconds
+        ENV.fetch("DEPENDABOT_OPEN_TIMEOUT_IN_SECONDS", DEFAULT_OPEN_TIMEOUT_IN_SECONDS).to_i
+      end
+
+      sig { returns(Integer) }
+      def self.read_timeout_in_seconds
+        ENV.fetch("DEPENDABOT_READ_TIMEOUT_IN_SECONDS", DEFAULT_READ_TIMEOUT_IN_SECONDS).to_i
+      end
+
       def docker_registry_client
         @docker_registry_client ||=
           DockerRegistry2::Registry.new(
             "https://#{registry_hostname}",
             user: registry_credentials&.fetch("username", nil),
             password: registry_credentials&.fetch("password", nil),
-            read_timeout: 10,
+            read_timeout: self.class.read_timeout_in_seconds,
+            open_timeout: self.class.open_timeout_in_seconds,
             http_options: { proxy: ENV.fetch("HTTPS_PROXY", nil) }
           )
       end
