@@ -174,11 +174,13 @@ USER dependabot
 COPY --from=rust /usr/local/rustup $RUSTUP_HOME
 COPY --from=rust /usr/local/cargo $CARGO_HOME
 
+FROM ghcr.io/astral-sh/uv:0.8.4 as uv
+
 # Configure cargo to use Git CLI so the Git shim works
 RUN mkdir -p ~/.cargo && printf "[net]\ngit-fetch-with-cli = true\n" >> ~/.cargo/config.toml
 
 # Install uv by copying from the official image
-COPY --from=ghcr.io/astral-sh/uv:0.8.4 /uv /uvx /usr/local/bin/
+COPY --from=uv /uv /uvx /usr/local/bin/
 
 COPY --chown=dependabot:dependabot cargo $DEPENDABOT_HOME/cargo
 COPY --chown=dependabot:dependabot common $DEPENDABOT_HOME/common
