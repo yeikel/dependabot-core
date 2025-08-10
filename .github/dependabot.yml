@@ -182,4 +182,4 @@ updates:
   - package-ecosystem: "pip"
     directory: "/uv/helpers"
     multi-ecosystem-group: "uv-ecosystem"
-    patterns: ["*"]
+    patterns: ["uv"]
