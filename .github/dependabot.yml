@@ -177,7 +177,9 @@ updates:
   - package-ecosystem: "docker"
     directory: "/uv"
     multi-ecosystem-group: "uv-ecosystem"
+    patterns: ["*"]
 
   - package-ecosystem: "pip"
     directory: "/uv/helpers"
     multi-ecosystem-group: "uv-ecosystem"
+    patterns: ["*"]
