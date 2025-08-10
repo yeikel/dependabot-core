@@ -1,6 +1,6 @@
 version: 2
 multi-ecosystem-groups:
-  uv:
+  uv-ecosystem:
     schedule:
       interval: "weekly"
       day: "sunday"
@@ -176,8 +176,8 @@ updates:
 
   - package-ecosystem: "docker"
     directory: "/uv"
-    multi-ecosystem-group: "uv"
+    multi-ecosystem-group: "uv-ecosystem"
 
   - package-ecosystem: "pip"
     directory: "/uv/helpers"
-    multi-ecosystem-group: "uv"
+    multi-ecosystem-group: "uv-ecosystem"
