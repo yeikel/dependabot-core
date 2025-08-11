@@ -175,7 +175,7 @@ COPY --from=rust /usr/local/rustup $RUSTUP_HOME
 COPY --from=rust /usr/local/cargo $CARGO_HOME
 
 # This cannot be inlined below (e.g., COPY --from=...) because Dependabot does not support that syntax yet
-FROM ghcr.io/astral-sh/uv:0.8.3 as uv
+FROM ghcr.io/astral-sh/uv:0.8.8 as uv
 # Configure cargo to use Git CLI so the Git shim works
 RUN mkdir -p ~/.cargo && printf "[net]\ngit-fetch-with-cli = true\n" >> ~/.cargo/config.toml
 
