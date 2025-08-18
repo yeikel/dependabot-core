@@ -182,4 +182,4 @@ updates:
     multi-ecosystem-group: "uv-ecosystem"
     patterns: ["*"]
     ignore:
-      update-types: [ "version-update:semver-major" ]
+      - update-types: [ "version-update:semver-major" ]
