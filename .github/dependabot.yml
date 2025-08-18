@@ -182,4 +182,5 @@ updates:
     multi-ecosystem-group: "uv-ecosystem"
     patterns: ["*"]
     ignore:
+      - dependency-name: "*"
       - update-types: [ "version-update:semver-major" ]
