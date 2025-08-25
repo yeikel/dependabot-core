@@ -1,5 +1,4 @@
 ARG TARGETARCH
-
 # From https://github.com/regclient/regclient/releases
 FROM --platform=linux/$TARGETARCH ghcr.io/regclient/regctl:v0.9.0 AS regctl
 
