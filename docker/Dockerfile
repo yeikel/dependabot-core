@@ -1,4 +1,4 @@
-FROM ghcr.io/sigstore/cosign/cosign:v2.0.2 AS cosign
+FROM ghcr.io/sigstore/cosign/cosign:v2.5.3 AS cosign
 # From https://github.com/regclient/regclient/releases
 FROM ghcr.io/regclient/regctl:v0.9.0 AS regctl
 
