@@ -15,7 +15,7 @@ updates:
     ignore: 
       # See https://github.com/sigstore/cosign/issues/4358
       - dependency-name: ghcr.io/sigstore/cosign/cosign
-        versions: "v99.99.91"
+        versions: "99.99.91"
     groups:
       regctl:
         patterns:
