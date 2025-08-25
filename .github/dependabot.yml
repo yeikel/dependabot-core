@@ -12,3 +12,7 @@ updates:
       interval: "weekly"
       day: "sunday"
       time: "16:00"
+    groups:
+      regctl:
+        patterns:
+          - "*"
