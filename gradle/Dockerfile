@@ -1,5 +1,5 @@
 # From https://hub.docker.com/_/gradle/tags
-FROM gradle:8.14.3-jdk21-ubi-minimal AS gradle
+FROM gradle:9.0.0-jdk21-ubi-minimal AS gradle
 
 FROM ghcr.io/dependabot/dependabot-updater-core
 
