@@ -6,7 +6,7 @@ FROM ghcr.io/dependabot/dependabot-updater-core
 
 ENV PATH=/opt/bin:$PATH
 COPY --from=regctl /regctl /opt/bin/regctl
-COPY --from=cosign /cosign /opt/bin/cosign
+COPY --from=cosign /ko-app/cosign /opt/bin/cosign
 
 RUN chmod o+rx /opt/bin/regctl &&  chmod o+rx /opt/bin/cosign
 
