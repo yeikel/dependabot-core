@@ -11,7 +11,7 @@ RUN chmod o+rx /opt/bin/regctl
 RUN cosign verify \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   --certificate-identity-regexp https://github.com/regclient/regclient/.github/workflows/ \
-  ghcr.io/regclient/regctl:latest
+  ghcr.io/regclient/regctl:v0.9.0
 
 USER dependabot
 
