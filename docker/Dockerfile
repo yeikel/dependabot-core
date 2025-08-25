@@ -1,3 +1,4 @@
+FROM ghcr.io/sigstore/cosign/cosign:v2.0.2 AS cosign
 # From https://github.com/regclient/regclient/releases
 FROM ghcr.io/regclient/regctl:v0.9.0 AS regctl
 
@@ -5,19 +6,18 @@ FROM ghcr.io/dependabot/dependabot-updater-core
 
 ENV PATH=/opt/bin:$PATH
 COPY --from=regctl /regctl /opt/bin/regctl
-RUN chmod o+rx /opt/bin/regctl
+COPY --from=cosign /cosign /opt/bin/cosign
+
+RUN chmod o+rx /opt/bin/regctl &&  chmod o+rx /opt/bin/cosign
 
 # Verify regclient binary. See https://regclient.org/install/#verifying-signatures
 RUN REGCTL_VERSION=$(regctl version | grep '^VCSTag:' | sed -E 's/[^0-9.]+//g') && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends cosign && \
     cosign verify \
       --certificate-oidc-issuer https://token.actions.githubusercontent.com \
       --certificate-identity-regexp https://github.com/regclient/regclient/.github/workflows/ \
       ghcr.io/regclient/regctl:v$REGCTL_VERSION && \
     # Remove cosign as it is not needed in the final image
-    apt-get remove -y cosign && \
-    rm -rf /var/lib/apt/lists/*
+    rm /opt/bin/cosign
 
 USER dependabot
 
