@@ -15,7 +15,7 @@ RUN REGCTL_VERSION=$(regctl version | grep '^VCSTag:' | sed -E 's/[^0-9.]+//g') 
       --certificate-oidc-issuer https://token.actions.githubusercontent.com \
       --certificate-identity-regexp https://github.com/regclient/regclient/.github/workflows/ \
       ghcr.io/regclient/regctl:v$REGCTL_VERSION && \
-    # Remove cosign as it is not needed in the final binary
+    # Remove cosign as it is not needed in the final image
     apt-get remove -y cosign && \
     rm -rf /var/lib/apt/lists/*
 
