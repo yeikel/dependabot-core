@@ -1,11 +1,4 @@
 version: 2
-multi-ecosystem-groups:
-  uv-ecosystem:
-    schedule:
-      interval: "weekly"
-      day: "sunday"
-      time: "16:00"
-
 updates:
     directory: "/gradle"
     schedule:
