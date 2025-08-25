@@ -1,3 +1,4 @@
+# From https://github.com/regclient/regclient/releases
 FROM ghcr.io/regclient/regctl:v0.9.1 AS regctl
 
 FROM ghcr.io/dependabot/dependabot-updater-core
