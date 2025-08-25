@@ -10,7 +10,7 @@ COPY --from=regctl /regctl /opt/bin/regctl
 RUN chmod o+rx /opt/bin/regctl
 
 # Verify regclient binary. See https://regclient.org/install/#verifying-signatures
-RUN VERSION=regctl version | grep '^VCSTag:' | sed -E 's/[^0-9.]+//g'
+RUN VERSION=$(regctl version | grep '^VCSTag:' | sed -E 's/[^0-9.]+//g')
 
 USER dependabot
 
