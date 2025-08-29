@@ -25,3 +25,6 @@ COPY --chown=dependabot:dependabot updater $DEPENDABOT_HOME/dependabot-updater
 
 # symlink so script/dependabot just works
 RUN mkdir -p ~/.m2 && ln -s ~/maven/settings.xml ~/.m2/settings.xml
+
+# Pre-install the dependency tree plugin to avoid re-downloading it every time
+RUN cd $DEPENDABOT_HOME/maven/lib/dependabot/maven && mvn dependency:tree
