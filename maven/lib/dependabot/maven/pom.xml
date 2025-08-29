@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.maven.plugins</groupId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
   <!--
   This build is not used directly within the native helper.
@@ -7,17 +11,19 @@
 
     1. We read the maven-dependency-plugin.version version dynamically from the native_helper
     2. We use Dependabot keep the version up to date
+    3. We pre-install the plugin in the native helper image to avoid downloading it with every build
   -->
 
   <properties>
     <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
   </properties>
-
-  <dependencies>
-    <dependency>
+  <build>
+  <plugins>
+    <plugin>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-dependency-plugin</artifactId>
       <version>${maven-dependency-plugin.version}</version>
-    </dependency>
-  </dependencies>
+    </plugin>
+  </plugins>
+  </build>
 </project>
