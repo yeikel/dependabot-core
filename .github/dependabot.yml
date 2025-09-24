@@ -199,6 +199,11 @@ updates:
         update-types: [ "version-update:semver-major" ]
   - package-ecosystem: "docker"
     directory: "/docker"
+    groups:
+      regclient:
+        patterns:
+          - "regclient/regctl"
+          - "sigstore/cosign/cosign"
     schedule:
       interval: "weekly"
       day: "sunday"
