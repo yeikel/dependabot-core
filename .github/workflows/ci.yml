@@ -32,6 +32,11 @@ jobs:
           token: '' # use git commands to avoid excessive rate limit usage
           filters: .github/ci-filters.yml
 
+      - name: View hardware info
+        if: matrix.os == 'macos-26'
+        run: |
+          system_profiler SPHardwareDataType
+
       - name: Install Docker
         if: matrix.os == 'macos-26'
         uses: docker/setup-docker-action@v4
