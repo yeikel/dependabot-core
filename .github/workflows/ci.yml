@@ -16,7 +16,7 @@ jobs:
       matrix:
         os:
           #- ubuntu-latest
-          - macos-latest # arm64 runner
+          - macos-15 # arm64 runner
         suite:
           - { path: uv, name: uv, ecosystem: uv }
 
