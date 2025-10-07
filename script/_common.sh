@@ -1,4 +1,3 @@
-# shellcheck shell=bash
 export UPDATER_CORE_IMAGE="ghcr.io/dependabot/dependabot-updater-core"
 export UPDATER_IMAGE="ghcr.io/dependabot/dependabot-updater-"
 export DOCKER_BUILDKIT=1

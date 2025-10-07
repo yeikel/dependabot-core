@@ -7,7 +7,7 @@ fi
 
 set -e
 cd "$(dirname "$0")/.."
-source script/_common
+source script/_common.sh
 
 export OMNIBUS_VERSION="latest"
 docker_build "$1"
