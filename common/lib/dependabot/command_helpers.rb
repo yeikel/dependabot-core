@@ -1,4 +1,4 @@
-# typed: strict
+# typed: strong
 # frozen_string_literal: true
 
 require "open3"
@@ -105,7 +105,7 @@ module Dependabot
           stderr_io.sync = true
 
           # Array to monitor both stdout and stderr
-          ios = [stdout_io, stderr_io]
+          ios = T.let([stdout_io, stderr_io], T::Array[IO])
 
           last_output_time = Time.now # Track the last time output was received
 
