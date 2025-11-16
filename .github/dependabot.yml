@@ -8,9 +8,7 @@ multi-ecosystem-groups:
 
 updates:
   - package-ecosystem: "docker"
-    directories:
-      - "/docker"
-      - "/helm"
+    directory: "/docker"
     schedule:
       interval: "weekly"
       day: "sunday"
@@ -20,7 +18,13 @@ updates:
         patterns:
           - "regclient/regctl*"
           - "sigstore/cosign/cosign*"
+  - package-ecosystem: "docker"
+    directory: "/helm"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "16:00"
+    groups:
       helm:
         patterns:
-          - "alpine/helm*"
-          - "oras-project/oras*"
+          - "*"
