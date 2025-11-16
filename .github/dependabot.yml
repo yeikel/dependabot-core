@@ -22,5 +22,5 @@ updates:
           - "sigstore/cosign/cosign*"
       helm:
         patterns:
-          - "helm*"
-          - "oras*"
+          - "alpine/helm*"
+          - "oras-project/oras*"
