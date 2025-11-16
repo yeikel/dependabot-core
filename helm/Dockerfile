@@ -5,7 +5,7 @@ FROM ghcr.io/regclient/regctl:v0.10.0 AS regctl
 # From https://github.com/helm/helm/releases
 FROM alpine/helm:3.17.2 AS helm
 # From https://github.com/oras-project/oras/releases
-FROM ghcr.io/oras-project/oras:v1.2.2 AS oras
+FROM ghcr.io/oras-project/oras:v1.3.0 AS oras
 
 FROM ghcr.io/dependabot/dependabot-updater-core
 
