@@ -1,5 +1,5 @@
 # From https://github.com/sigstore/cosign/releases
-FROM ghcr.io/sigstore/cosign/cosign:v2.6.1@sha256:68839b7f13dac5a6744a5d8818e984dd39183374e37855c19e14d623d9bc903 AS cosign
+FROM ghcr.io/sigstore/cosign/cosign:v2.6.1@sha256:68839b7f13dac5a6744a5d8818e984dd39183374e37855c19e14d623d9bc9037 AS cosign
 # From https://github.com/regclient/regclient/releases
 FROM ghcr.io/regclient/regctl:v0.9.2@sha256:6e4dba784d54b82bc3556b47daac5b8af898c138e5024c628054715ccd4e2d2b AS regctl
 # From https://github.com/helm/helm/releases
