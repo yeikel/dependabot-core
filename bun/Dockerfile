@@ -7,9 +7,6 @@ ARG COREPACK_VERSION=0.33.0
 # Check for updates at https://github.com/oven-sh/bun/releases
 ARG BUN_VERSION=1.2.5
 
-# See https://github.com/nodesource/distributions#installation-instructions
-ARG NODEJS_VERSION=20
-
 # Install Node and bun
 RUN mkdir -p /etc/apt/keyrings \
   && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
