@@ -1,9 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1.20
 FROM ghcr.io/dependabot/dependabot-updater-core
 
-# Check for updates at https://github.com/nodejs/corepack/releases
-ARG COREPACK_VERSION=0.33.0
-
 # Check for updates at https://github.com/oven-sh/bun/releases
 ARG BUN_VERSION=1.2.5
 
