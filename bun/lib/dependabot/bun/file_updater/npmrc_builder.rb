@@ -172,6 +172,9 @@ module Dependabot
           end
 
           return lines unless lines.any? { |str| str.include?("auth=") }
+
+          # Work around a suspected yarn bug
+          ["always-auth = true"] + lines
         end
 
         sig { params(token: String, registry: T.nilable(String)).returns(String) }
