@@ -1,7 +1,7 @@
 pip==24.0
 pip-tools==7.4.1
 flake8==7.1.0
-hashin==1.0.3
+hashin==1.0.5
 pipenv==2024.4.1
 plette==2.1.0
 poetry==1.8.5
