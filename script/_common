@@ -85,6 +85,7 @@ function docker_build() {
 
   export UPDATER_IMAGE_NAME="$UPDATER_IMAGE$TAG"
 
+  # shellcheck disable=SC2086  # as $DOCKER_BUILD_ARGS relies on word-splitting
   docker build \
     $DOCKER_BUILD_ARGS \
     --build-arg BUILDKIT_INLINE_CACHE=1 \
