@@ -11,8 +11,6 @@ ARG PY_3_9=3.9.24
 # https://github.com/pyenv/pyenv/releases
 ARG PYENV_VERSION=v2.6.11
 
-FROM ghcr.io/dependabot/dependabot-updater-pip AS updater-pip
-
 # This cannot be inlined below (e.g., COPY --from=...) because Dependabot does not support that syntax yet
 FROM ghcr.io/astral-sh/uv:0.9.11 AS uv
 
@@ -26,7 +24,7 @@ ARG PY_3_9
 ARG PYENV_VERSION
 USER root
 
-COPY --from=updater-pip --chown=dependabot:dependabot /opt/python/helpers /opt/python/helpers
+COPY --chown=dependabot:dependabot uv/helpers /opt/python/helpers
 
 # TODO: Now that switched from `pyenv install` which compiled from source to downloading / copying a pre-compiled python
 # we could entirely drop pyenv if we change our ruby code that calls `pyenv exec` to track which version of python to
