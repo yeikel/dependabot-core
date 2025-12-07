@@ -77,15 +77,14 @@ function docker_build() {
     docker build \
       $DOCKER_BUILD_ARGS \
       --build-arg BUILDKIT_INLINE_CACHE=1 \
-      --cache-from "$UPDATER_IMAGEpython" \
-      -t "$UPDATER_IMAGEpython" \
-      -f $ECOSYSTEM/Dockerfile \
+      --cache-from "$PYTHON_IMAGE" \
+      -t "$PYTHON_IMAGE" \
+      -f python/Dockerfile \
       .
   fi
 
   export UPDATER_IMAGE_NAME="$UPDATER_IMAGE$TAG"
 
-  # shellcheck disable=SC2086  # as $DOCKER_BUILD_ARGS relies on word-splitting
   docker build \
     $DOCKER_BUILD_ARGS \
     --build-arg BUILDKIT_INLINE_CACHE=1 \
