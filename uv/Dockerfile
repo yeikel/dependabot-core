@@ -7,5 +7,4 @@ FROM ghcr.io/dependabot/dependabot-updater-pip
 # Install uv by copying from the official image
 COPY --from=uv /uv /uvx /usr/local/bin/
 
-COPY --chown=dependabot:dependabot --parents uv python cargo common $DEPENDABOT_HOME/
-COPY --chown=dependabot:dependabot updater $DEPENDABOT_HOME/dependabot-updater
+COPY --chown=dependabot:dependabot --parents uv $DEPENDABOT_HOME/
