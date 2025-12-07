@@ -69,6 +69,20 @@ function docker_build() {
   # We don't sign the updater image with Notary, so disable Docker Content Trust for remaining builds
   unset DOCKER_CONTENT_TRUST
 
+  echo "Building $UPDATER_IMAGE$TAG"
+
+  # If the tag is uv, we need to build the python tag first
+  if [ "$TAG" = "uv" ]; then
+    PYTHON_IMAGE="${UPDATER_IMAGE}python"
+    docker build \
+      $DOCKER_BUILD_ARGS \
+      --build-arg BUILDKIT_INLINE_CACHE=1 \
+      --cache-from "$UPDATER_IMAGEpython" \
+      -t "$UPDATER_IMAGEpython" \
+      -f $ECOSYSTEM/Dockerfile \
+      .
+  fi
+
   export UPDATER_IMAGE_NAME="$UPDATER_IMAGE$TAG"
 
   # shellcheck disable=SC2086  # as $DOCKER_BUILD_ARGS relies on word-splitting
