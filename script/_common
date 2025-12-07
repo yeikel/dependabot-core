@@ -72,16 +72,16 @@ function docker_build() {
   echo "Building $UPDATER_IMAGE$TAG"
 
   # If the tag is uv, we need to build the python tag first
-  if [ "$TAG" = "uv" ]; then
-    PYTHON_IMAGE="${UPDATER_IMAGE}python"
-    docker build \
-      $DOCKER_BUILD_ARGS \
-      --build-arg BUILDKIT_INLINE_CACHE=1 \
-      --cache-from "$PYTHON_IMAGE" \
-      -t "$PYTHON_IMAGE" \
-      -f python/Dockerfile \
-      .
-  fi
+ # if [ "$TAG" = "uv" ]; then
+ #   PYTHON_IMAGE="${UPDATER_IMAGE}python"
+ #   docker build \
+ #     $DOCKER_BUILD_ARGS \
+ #     --build-arg BUILDKIT_INLINE_CACHE=1 \
+ #     --cache-from "$PYTHON_IMAGE" \
+ #     -t "$PYTHON_IMAGE" \
+ #     -f python/Dockerfile \
+ #     .
+ # fi
 
   export UPDATER_IMAGE_NAME="$UPDATER_IMAGE$TAG"
 
