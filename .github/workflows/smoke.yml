@@ -10,7 +10,7 @@ on: # yamllint disable-line rule:truthy
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: false
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
