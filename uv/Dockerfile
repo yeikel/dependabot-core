@@ -24,7 +24,7 @@ ARG PY_3_9
 ARG PYENV_VERSION
 USER root
 
-COPY --chown=dependabot:dependabot uv/helpers /opt/python/helpers
+COPY --chown=dependabot:dependabot python/helpers /opt/python/helpers
 
 # TODO: Now that switched from `pyenv install` which compiled from source to downloading / copying a pre-compiled python
 # we could entirely drop pyenv if we change our ruby code that calls `pyenv exec` to track which version of python to
