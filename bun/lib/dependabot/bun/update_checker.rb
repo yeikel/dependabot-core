@@ -67,19 +67,12 @@ module Dependabot
 
       sig { returns(T::Boolean) }
       def up_to_date?
-        return false if security_update? &&
-                        dependency.version &&
-                        version_class.correct?(dependency.version) &&
-                        vulnerable_versions.any? &&
-                        !vulnerable_versions.include?(current_version)
+        return false if dependency.version &&
+                        version_class.correct?(dependency.version)
 
         super
       end
 
-      sig { returns(T::Boolean) }
-      def vulnerable?
-        super || vulnerable_versions.any?
-      end
 
       sig { override.returns(T.nilable(T.any(String, Gem::Version))) }
       def latest_version
@@ -372,11 +365,6 @@ module Dependabot
             credentials: credentials,
             dependency_files: dependency_files
           ).library?
-      end
-
-      sig { returns(T::Boolean) }
-      def security_update?
-        security_advisories.any?
       end
 
       sig { returns(T.nilable(T::Hash[Symbol, T.untyped])) }
