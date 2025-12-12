@@ -1,8 +1,8 @@
 # syntax=docker.io/docker/dockerfile:1.20
-FROM ghcr.io/dependabot/dependabot-updater-core
-
 # Check for updates at https://github.com/oven-sh/bun/releases
 FROM oven/bun:1.3.3 AS bun
+
+FROM ghcr.io/dependabot/dependabot-updater-core
 
 USER dependabot
 
