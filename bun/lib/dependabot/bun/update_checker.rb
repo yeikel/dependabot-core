@@ -50,9 +50,6 @@ module Dependabot
         @latest_version = T.let(nil, T.nilable(T.any(String, Gem::Version)))
         @latest_resolvable_version = T.let(nil, T.nilable(T.any(String, Dependabot::Version)))
         @updated_requirements = T.let(nil, T.nilable(T::Array[T::Hash[Symbol, T.untyped]]))
-        @vulnerability_audit = T.let(nil, T.nilable(T::Hash[String, T.untyped]))
-        @vulnerable_versions = T.let(nil, T.nilable(T::Array[T.any(String, Gem::Version)]))
-
         @latest_version_for_git_dependency = T.let(nil, T.nilable(T.any(String, Gem::Version)))
         @latest_released_version = T.let(nil, T.nilable(Gem::Version))
         @latest_version_details = T.let(nil, T.nilable(T::Hash[Symbol, T.untyped]))
@@ -67,11 +64,8 @@ module Dependabot
 
       sig { returns(T::Boolean) }
       def up_to_date?
-        return false if security_update? &&
-                        dependency.version &&
-                        version_class.correct?(dependency.version) &&
-                        vulnerable_versions.any? &&
-                        !vulnerable_versions.include?(current_version)
+        return false if dependency.version &&
+                        version_class.correct?(dependency.version)
 
         super
       end
