@@ -436,7 +436,6 @@ module Dependabot
           )
       end
     end
-  end
 end
 
 Dependabot::UpdateCheckers
