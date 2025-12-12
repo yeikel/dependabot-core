@@ -677,6 +677,31 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
         ]
       end
 
+      context "when the dependency is top-level" do
+        let(:dependency_name) { "@dependabot-fixtures/npm-parent-dependency" }
+        let(:dependency) do
+          Dependabot::Dependency.new(
+            name: dependency_name,
+            version: "1.0.0",
+            requirements: [{
+              file: "package.json",
+              requirement: "^1.0.0",
+              groups: [],
+              source: nil
+            }],
+            package_manager: "bun"
+          )
+        end
+        let(:target_version) { "2.0.2" }
+
+        it "returns the lowest security fix version" do
+          allow(checker).to receive(:lowest_security_fix_version).and_return(
+            Dependabot::Bun::Version.new(target_version)
+          )
+          expect(lowest_resolvable_security_fix_version).to eq(Dependabot::Bun::Version.new(target_version))
+        end
+      end
+
       context "when the dependency is not top-level" do
         before { allow(dependency).to receive(:top_level?).and_return(false) }
 
