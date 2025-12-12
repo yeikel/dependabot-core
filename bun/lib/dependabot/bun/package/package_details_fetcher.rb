@@ -34,8 +34,6 @@ module Dependabot
         RELEASE_PACKAGE_TYPE_NPM = "npm"
 
         REGISTRY_FILE_NPMRC = ".npmrc"
-        REGISTRY_FILE_YARNRC = ".yarnrc"
-        REGISTRY_FILE_YARNRC_YML = ".yarnrc.yml"
 
         sig do
           params(
