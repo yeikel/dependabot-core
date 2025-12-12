@@ -104,12 +104,6 @@ module Dependabot
         sig { returns(T.nilable(Dependabot::DependencyFile)) }
         attr_reader :npmrc_file
 
-        sig { returns(T.nilable(Dependabot::DependencyFile)) }
-        attr_reader :yarnrc_file
-
-        sig { returns(T.nilable(Dependabot::DependencyFile)) }
-        attr_reader :yarnrc_yml_file
-
         sig { params(dependency_name: T.nilable(String)).returns(T.nilable(String)) }
         def explicit_registry_from_rc(dependency_name)
           if dependency_name&.start_with?("@") && dependency_name.include?("/")
