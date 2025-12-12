@@ -14,7 +14,7 @@ module Dependabot
 
         require "dependabot/bun/file_parser/bun_lock"
 
-        DEFAULT_LOCKFILES = %w(bun.lock).freeze
+        DEFAULT_LOCKFILES = %w(package-lock.json yarn.lock pnpm-lock.yaml bun.lock npm-shrinkwrap.json).freeze
 
         LockFile = T.type_alias { BunLock }
 
