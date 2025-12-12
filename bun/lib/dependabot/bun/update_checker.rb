@@ -162,7 +162,7 @@ module Dependabot
 
         # We don't need to directly update the target dependency if it will
         # be updated as a side effect of updating the parent. However, we need
-        # to include it so it's described in the PR and we'll pass validation
+        # to include it so it's described in the PR, and we'll pass validation
         # that this dependency is at a non-vulnerable version.
         if updated_deps.none? { |dep| dep.name == dependency.name }
           target_version = vulnerability_audit["target_version"]
