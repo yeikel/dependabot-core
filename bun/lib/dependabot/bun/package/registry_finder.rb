@@ -30,30 +30,22 @@ module Dependabot
           params(
             dependency: T.nilable(Dependabot::Dependency),
             credentials: T::Array[Dependabot::Credential],
-            npmrc_file: T.nilable(Dependabot::DependencyFile),
-            yarnrc_file: T.nilable(Dependabot::DependencyFile),
-            yarnrc_yml_file: T.nilable(Dependabot::DependencyFile)
+            npmrc_file: T.nilable(Dependabot::DependencyFile)
           ).void
         end
         def initialize(
           dependency:,
           credentials:,
-          npmrc_file: nil,
-          yarnrc_file: nil,
-          yarnrc_yml_file: nil
+          npmrc_file: nil
         )
           @dependency = dependency
           @credentials = credentials
           @npmrc_file = npmrc_file
-          @yarnrc_file = yarnrc_file
-          @yarnrc_yml_file = yarnrc_yml_file
-
           @registry = T.let(nil, T.nilable(String))
           @first_registry_with_dependency_details = T.let(nil, T.nilable(String))
           @known_registries = T.let([], T::Array[T::Hash[String, T.nilable(String)]])
           @configured_global_registry = T.let(nil, T.nilable(String))
           @global_registry = T.let(nil, T.nilable(String))
-          @parsed_yarnrc_yml = T.let(nil, T.nilable(T::Hash[String, T.untyped]))
         end
 
         sig { returns(String) }
