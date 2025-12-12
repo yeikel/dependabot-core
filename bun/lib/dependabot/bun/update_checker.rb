@@ -72,7 +72,7 @@ module Dependabot
 
       sig { returns(T::Boolean) }
       def vulnerable?
-        super || vulnerable_versions.any?
+        super
       end
 
       sig { override.returns(T.nilable(T.any(String, Gem::Version))) }
