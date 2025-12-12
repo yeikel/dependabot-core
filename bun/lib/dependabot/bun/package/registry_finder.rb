@@ -241,14 +241,7 @@ module Dependabot
             }
           end
 
-          registries += npmrc_global_registries
-        end
-
-        sig { returns(T::Array[T::Hash[String, T.nilable(String)]]) }
-        def yarnrc_registries
-          return [] unless yarnrc_file
-
-          yarnrc_global_registries
+          registries + npmrc_global_registries
         end
 
         sig do
