@@ -160,37 +160,6 @@ module Dependabot
 
       private
 
-      sig { override.returns(T::Boolean) }
-      def latest_version_resolvable_with_full_unlock?
-        return false unless latest_version
-
-        return version_resolver.latest_version_resolvable_with_full_unlock? if dependency.top_level?
-
-        return false unless security_advisories.any?
-
-        vulnerability_audit["fix_available"]
-      end
-
-      # rubocop:disable Metrics/AbcSize
-      sig { returns(T::Array[Dependabot::Dependency]) }
-      def conflicting_updated_dependencies
-        top_level_dependencies = top_level_dependency_lookup
-
-        updated_deps = []
-        vulnerability_audit["fix_updates"].each do |update|
-          dependency_name = update["dependency_name"]
-          requirements = top_level_dependencies[dependency_name]&.requirements || []
-
-          updated_deps << build_updated_dependency(
-            dependency: Dependency.new(
-              name: dependency_name,
-              package_manager: "bun",
-              requirements: requirements
-            ),
-            version: update["target_version"],
-            previous_version: update["current_version"]
-          )
-        end
         # rubocop:enable Metrics/AbcSize
 
         # We don't need to directly update the target dependency if it will
