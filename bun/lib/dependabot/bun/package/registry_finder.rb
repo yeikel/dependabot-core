@@ -217,7 +217,6 @@ module Dependabot
                             .select { |cred| cred["type"] == "npm_registry" && cred["registry"] }
                             .tap { |arr| arr.each { |c| c["token"] ||= nil } }
               registries += npmrc_registries
-              registries += yarnrc_registries
 
               unique_registries(registries)
             end
