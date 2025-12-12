@@ -221,23 +221,6 @@ module Dependabot
           metadata: metadata
         )
       end
-
-      sig { returns(T.nilable(T.any(String, Gem::Version, T.untyped))) }
-      def latest_resolvable_transitive_security_fix_version_with_no_unlock
-        versions = T.let([], T::Array[Gem::Version])
-
-        latest = latest_released_version
-        versions.push(latest) if latest
-
-        fix_possible = Dependabot::UpdateCheckers::VersionFilters.filter_vulnerable_versions(
-          versions,
-          security_advisories
-        ).any?
-        return nil unless fix_possible
-
-        latest_resolvable_version
-      end
-
       sig { returns(T.nilable(T.any(String, Dependabot::Version))) }
       def latest_resolvable_version_with_no_unlock_for_git_dependency
         reqs = dependency.requirements.filter_map do |r|
