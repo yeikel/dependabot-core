@@ -113,46 +113,6 @@ module Dependabot
           end
       end
 
-      sig { override.returns(T.nilable(Dependabot::Version)) }
-      def lowest_security_fix_version
-        # This will require a full unlock to update multiple top level ancestors.
-        return if vulnerability_audit["fix_available"] && vulnerability_audit["top_level_ancestors"].count > 1
-
-        T.unsafe(latest_version_finder.lowest_security_fix_version)
-      end
-
-      sig { override.returns(T.nilable(Dependabot::Version)) }
-      def lowest_resolvable_security_fix_version
-        raise "Dependency not vulnerable!" unless vulnerable?
-
-        # NOTE: Currently, we don't resolve transitive/sub-dependencies as
-        # npm/yarn don't provide any control over updating to a specific
-        # sub-dependency version.
-
-        # Return nil for vulnerable transitive dependencies if there are conflicting dependencies.
-        # This helps catch errors in such cases.
-        return nil if !dependency.top_level? && conflicting_dependencies.any?
-
-        # For transitive dependencies without conflicts, return the latest resolvable transitive
-        # security fix version that does not require unlocking other dependencies.
-        return latest_resolvable_transitive_security_fix_version_with_no_unlock unless dependency.top_level?
-
-        # For top-level dependencies, return the lowest security fix version.
-        # TODO: Consider checking resolvability here in the future.
-        lowest_security_fix_version
-      end
-
-      sig { override.returns(T.nilable(T.any(String, Dependabot::Version))) }
-      def latest_resolvable_version_with_no_unlock
-        unless dependency.top_level?
-          return T.cast(latest_resolvable_version, T.nilable(T.any(String, Dependabot::Version)))
-        end
-
-        return latest_resolvable_version_with_no_unlock_for_git_dependency if git_dependency?
-
-        latest_version_finder.latest_version_with_no_unlock
-      end
-
       sig do
         params(updated_version: T.any(String, Gem::Version))
           .returns(T.nilable(T.any(String, T.untyped)))
@@ -198,55 +158,7 @@ module Dependabot
         library? ? RequirementsUpdateStrategy::WidenRanges : RequirementsUpdateStrategy::BumpVersions
       end
 
-      sig { override.returns(T::Array[T::Hash[String, String]]) }
-      def conflicting_dependencies
-        conflicts = ConflictingDependencyResolver.new(
-          dependency_files: dependency_files,
-          credentials: credentials
-        ).conflicting_dependencies(
-          dependency: dependency,
-          target_version: lowest_security_fix_version
-        )
-        return conflicts unless vulnerability_audit_performed?
-
-        vulnerable = [vulnerability_audit].select do |hash|
-          !hash["fix_available"] && hash["explanation"]
-        end
-
-        conflicts + vulnerable
-      end
-
       private
-
-      sig { returns(T::Boolean) }
-      def vulnerability_audit_performed?
-        !!defined?(@vulnerability_audit)
-      end
-
-      sig { returns(T::Hash[String, T.untyped]) }
-      def vulnerability_audit
-        @vulnerability_audit ||=
-          VulnerabilityAuditor.new(
-            dependency_files: dependency_files,
-            credentials: credentials
-          ).audit(
-            dependency: dependency,
-            security_advisories: security_advisories
-          )
-      end
-
-      sig { returns(T::Array[T.any(String, Gem::Version)]) }
-      def vulnerable_versions
-        @vulnerable_versions ||=
-          begin
-            all_versions = dependency.all_versions
-                                     .filter_map { |v| version_class.new(v) if version_class.correct?(v) }
-
-            all_versions.select do |v|
-              security_advisories.any? { |advisory| advisory.vulnerable?(v) }
-            end
-          end
-      end
 
       sig { override.returns(T::Boolean) }
       def latest_version_resolvable_with_full_unlock?
@@ -257,14 +169,6 @@ module Dependabot
         return false unless security_advisories.any?
 
         vulnerability_audit["fix_available"]
-      end
-
-      sig { override.returns(T::Array[Dependabot::Dependency]) }
-      def updated_dependencies_after_full_unlock
-        return conflicting_updated_dependencies if security_advisories.any? && vulnerability_audit["fix_available"]
-
-        T.must(version_resolver.dependency_updates_from_full_unlock)
-         .map { |update_details| build_updated_dependency(update_details.transform_keys(&:to_sym)) }
       end
 
       # rubocop:disable Metrics/AbcSize
