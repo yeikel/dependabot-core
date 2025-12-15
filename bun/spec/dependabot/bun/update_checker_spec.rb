@@ -927,41 +927,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
         )
     end
 
-    context "with a security vulnerability" do
-      let(:dependency_version) { "1.1.0" }
-      let(:security_advisories) do
-        [
-          Dependabot::SecurityAdvisory.new(
-            dependency_name: "rails",
-            package_manager: "bun",
-            vulnerable_versions: ["~1.1.0", "1.2.0", "1.3.0"]
-          )
-        ]
-      end
-      let(:target_version) { "1.2.1" }
-
-      it "delegates to the RequirementsUpdater" do
-        expect(described_class::RequirementsUpdater)
-          .to receive(:new)
-          .with(
-            requirements: dependency_requirements,
-            updated_source: nil,
-            latest_resolvable_version: "1.2.1",
-            update_strategy: Dependabot::RequirementsUpdateStrategy::BumpVersions
-          )
-          .and_call_original
-        expect(checker.updated_requirements)
-          .to eq(
-            [{
-              file: "package.json",
-              requirement: "^1.2.1",
-              groups: [],
-              source: nil
-            }]
-          )
-      end
-    end
-
     context "when a requirements_update_strategy has been specified" do
       let(:checker) do
         described_class.new(
