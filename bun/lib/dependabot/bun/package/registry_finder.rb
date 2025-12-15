@@ -263,6 +263,7 @@ module Dependabot
           @global_registry
         end
 
+        # rubocop:disable Metrics/PerceivedComplexity
         sig { returns(T.nilable(String)) }
         def configured_global_registry
           return @configured_global_registry if @configured_global_registry
