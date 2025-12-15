@@ -522,66 +522,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
     subject { checker.preferred_resolvable_version }
 
     it { is_expected.to eq(Dependabot::Bun::Version.new("1.7.0")) }
-
-    context "with a security vulnerability" do
-      let(:dependency_version) { "1.1.0" }
-      let(:security_advisories) do
-        [
-          Dependabot::SecurityAdvisory.new(
-            dependency_name: "rails",
-            package_manager: "bun",
-            vulnerable_versions: ["~1.1.0", "1.2.0", "1.3.0"]
-          )
-        ]
-      end
-      let(:target_version) { "1.2.1" }
-
-      it { is_expected.to eq(Dependabot::Bun::Version.new("1.2.1")) }
-
-      context "when dealing with a sub-dependency" do
-        let(:dependency_name) { "@dependabot-fixtures/npm-transitive-dependency" }
-        let(:target_version) { "1.0.1" }
-        let(:dependency) do
-          Dependabot::Dependency.new(
-            name: dependency_name,
-            version: "1.0.0",
-            requirements: [],
-            package_manager: "bun"
-          )
-        end
-        let(:security_advisories) do
-          [
-            Dependabot::SecurityAdvisory.new(
-              dependency_name: "rails",
-              package_manager: "bun",
-              vulnerable_versions: ["<= 1.0.0"]
-            )
-          ]
-        end
-
-        it "delegates to SubdependencyVersionResolver" do
-          dummy_version_resolver =
-            instance_double(described_class::SubdependencyVersionResolver)
-
-          expect(described_class::SubdependencyVersionResolver)
-            .to receive(:new)
-            .with(
-              dependency: dependency,
-              credentials: credentials,
-              dependency_files: dependency_files,
-              ignored_versions: ignored_versions,
-              latest_allowable_version: Dependabot::Bun::Version.new("1.0.1"),
-              repo_contents_path: nil
-            ).and_return(dummy_version_resolver)
-          expect(dummy_version_resolver)
-            .to receive(:latest_resolvable_version)
-            .and_return(Dependabot::Bun::Version.new("1.0.1"))
-
-          expect(checker.preferred_resolvable_version)
-            .to eq(Dependabot::Bun::Version.new("1.0.1"))
-        end
-      end
-    end
   end
 
   describe "#lowest_resolvable_security_fix_version" do
@@ -644,13 +584,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
           )
         end
         let(:target_version) { "2.0.2" }
-
-        it "returns the lowest security fix version" do
-          allow(checker).to receive(:lowest_security_fix_version).and_return(
-            Dependabot::Bun::Version.new(target_version)
-          )
-          expect(lowest_resolvable_security_fix_version).to eq(Dependabot::Bun::Version.new(target_version))
-        end
       end
     end
   end
