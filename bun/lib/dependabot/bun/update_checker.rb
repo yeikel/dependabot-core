@@ -124,6 +124,7 @@ module Dependabot
       sig { override.returns(T.nilable(Dependabot::Version)) }
       def lowest_resolvable_security_fix_version
         raise "Dependency not vulnerable!" unless vulnerable?
+
         # TODO: Consider checking resolvability here in the future.
         lowest_security_fix_version
       end

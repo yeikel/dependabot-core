@@ -263,13 +263,13 @@ module Dependabot
           @global_registry
         end
 
-        # rubocop:disable Metrics/PerceivedComplexity
         sig { returns(T.nilable(String)) }
         def configured_global_registry
           return @configured_global_registry if @configured_global_registry
 
           @configured_global_registry = npmrc_file && npmrc_global_registries.first&.fetch("url")
           return @configured_global_registry if @configured_global_registry
+
           replaces_base = credentials.find { |cred| cred["type"] == "npm_registry" && cred.replaces_base? }
           if replaces_base
             registry = replaces_base["registry"]
@@ -279,8 +279,6 @@ module Dependabot
 
           @configured_global_registry = nil
         end
-        # rubocop:enable Metrics/PerceivedComplexity
-
         sig { returns(T::Array[T::Hash[String, String]]) }
         def npmrc_global_registries
           global_rc_registries(npmrc_file, syntax: NPM_GLOBAL_REGISTRY_REGEX)
@@ -290,6 +288,7 @@ module Dependabot
         def scoped_registry(scope)
           scoped_rc_registry = scoped_rc_registry(npmrc_file, syntax: NPM_SCOPED_REGISTRY_REGEX, scope: scope)
           return scoped_rc_registry if scoped_rc_registry
+
           nil
         end
 

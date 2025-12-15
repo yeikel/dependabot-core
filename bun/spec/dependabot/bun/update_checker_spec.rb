@@ -555,37 +555,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
         expect { lowest_resolvable_security_fix_version }.to raise_error("Dependency not vulnerable!")
       end
     end
-
-    context "when the dependency is vulnerable" do
-      let(:security_advisories) do
-        [
-          Dependabot::SecurityAdvisory.new(
-            dependency_name: dependency_name,
-            package_manager: "bun",
-            vulnerable_versions: ["<1.2.1"],
-            safe_versions: [">=1.2.1 <2.0.0"]
-          )
-        ]
-      end
-
-      context "when the dependency is top-level" do
-        let(:dependency_name) { "@dependabot-fixtures/npm-parent-dependency" }
-        let(:dependency) do
-          Dependabot::Dependency.new(
-            name: dependency_name,
-            version: "1.0.0",
-            requirements: [{
-              file: "package.json",
-              requirement: "^1.0.0",
-              groups: [],
-              source: nil
-            }],
-            package_manager: "bun"
-          )
-        end
-        let(:target_version) { "2.0.2" }
-      end
-    end
   end
 
   describe "#latest_resolvable_version_with_no_unlock" do
