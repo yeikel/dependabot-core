@@ -17,7 +17,6 @@ module Dependabot
       require_relative "update_checker/latest_version_finder"
       require_relative "update_checker/version_resolver"
       require_relative "update_checker/subdependency_version_resolver"
-      require_relative "update_checker/conflicting_dependency_resolver"
       require_relative "update_checker/vulnerability_auditor"
 
       sig do
@@ -183,24 +182,6 @@ module Dependabot
 
         # Otherwise, widen ranges for libraries and bump versions for apps
         library? ? RequirementsUpdateStrategy::WidenRanges : RequirementsUpdateStrategy::BumpVersions
-      end
-
-      sig { override.returns(T::Array[T::Hash[String, String]]) }
-      def conflicting_dependencies
-        conflicts = ConflictingDependencyResolver.new(
-          dependency_files: dependency_files,
-          credentials: credentials
-        ).conflicting_dependencies(
-          dependency: dependency,
-          target_version: lowest_security_fix_version
-        )
-        return conflicts unless vulnerability_audit_performed?
-
-        vulnerable = [vulnerability_audit].select do |hash|
-          !hash["fix_available"] && hash["explanation"]
-        end
-
-        conflicts + vulnerable
       end
 
       private
