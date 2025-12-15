@@ -1,6 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1.20
 # Check for updates at https://github.com/oven-sh/bun/releases
-FROM oven/bun:1.3.3 AS bun
+FROM oven/bun:1.3.3-debian@sha256:3da1c52799fc527af4c5969876734cbaddbf3e49479c601cfebdb0d7cbcc61b4 AS bun
 
 FROM ghcr.io/dependabot/dependabot-updater-core
 
