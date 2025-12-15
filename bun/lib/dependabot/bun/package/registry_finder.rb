@@ -22,38 +22,27 @@ module Dependabot
         ).freeze
         NPM_AUTH_TOKEN_REGEX = %r{//(?<registry>.*)/:_authToken=(?<token>.*)$}
         NPM_GLOBAL_REGISTRY_REGEX = /^registry\s*=\s*['"]?(?<registry>.*?)['"]?$/
-        YARN_GLOBAL_REGISTRY_REGEX = /^(?:--)?registry\s+((['"](?<registry>.*)['"])|(?<registry>.*))/
         NPM_SCOPED_REGISTRY_REGEX = /^(?<scope>@[^:]+)\s*:registry\s*=\s*['"]?(?<registry>.*?)['"]?$/
-        YARN_SCOPED_REGISTRY_REGEX = /['"](?<scope>@[^:]+):registry['"]\s((['"](?<registry>.*)['"])|(?<registry>.*))/
-
         sig do
           params(
             dependency: T.nilable(Dependabot::Dependency),
             credentials: T::Array[Dependabot::Credential],
-            npmrc_file: T.nilable(Dependabot::DependencyFile),
-            yarnrc_file: T.nilable(Dependabot::DependencyFile),
-            yarnrc_yml_file: T.nilable(Dependabot::DependencyFile)
+            npmrc_file: T.nilable(Dependabot::DependencyFile)
           ).void
         end
         def initialize(
           dependency:,
           credentials:,
-          npmrc_file: nil,
-          yarnrc_file: nil,
-          yarnrc_yml_file: nil
+          npmrc_file: nil
         )
           @dependency = dependency
           @credentials = credentials
           @npmrc_file = npmrc_file
-          @yarnrc_file = yarnrc_file
-          @yarnrc_yml_file = yarnrc_yml_file
-
           @registry = T.let(nil, T.nilable(String))
           @first_registry_with_dependency_details = T.let(nil, T.nilable(String))
           @known_registries = T.let([], T::Array[T::Hash[String, T.nilable(String)]])
           @configured_global_registry = T.let(nil, T.nilable(String))
           @global_registry = T.let(nil, T.nilable(String))
-          @parsed_yarnrc_yml = T.let(nil, T.nilable(T::Hash[String, T.untyped]))
         end
 
         sig { returns(String) }
@@ -111,12 +100,6 @@ module Dependabot
 
         sig { returns(T.nilable(Dependabot::DependencyFile)) }
         attr_reader :npmrc_file
-
-        sig { returns(T.nilable(Dependabot::DependencyFile)) }
-        attr_reader :yarnrc_file
-
-        sig { returns(T.nilable(Dependabot::DependencyFile)) }
-        attr_reader :yarnrc_yml_file
 
         sig { params(dependency_name: T.nilable(String)).returns(T.nilable(String)) }
         def explicit_registry_from_rc(dependency_name)
@@ -231,8 +214,6 @@ module Dependabot
                             .select { |cred| cred["type"] == "npm_registry" && cred["registry"] }
                             .tap { |arr| arr.each { |c| c["token"] ||= nil } }
               registries += npmrc_registries
-              registries += yarnrc_registries
-
               unique_registries(registries)
             end
           @known_registries
@@ -257,13 +238,6 @@ module Dependabot
           end
 
           registries += npmrc_global_registries
-        end
-
-        sig { returns(T::Array[T::Hash[String, T.nilable(String)]]) }
-        def yarnrc_registries
-          return [] unless yarnrc_file
-
-          yarnrc_global_registries
         end
 
         sig do
@@ -294,14 +268,8 @@ module Dependabot
         def configured_global_registry
           return @configured_global_registry if @configured_global_registry
 
-          @configured_global_registry = (npmrc_file && npmrc_global_registries.first&.fetch("url")) ||
-                                        (yarnrc_file && yarnrc_global_registries.first&.fetch("url"))
+          @configured_global_registry = npmrc_file && npmrc_global_registries.first&.fetch("url")
           return @configured_global_registry if @configured_global_registry
-
-          if parsed_yarnrc_yml&.key?("npmRegistryServer")
-            return @configured_global_registry = T.must(parsed_yarnrc_yml)["npmRegistryServer"]
-          end
-
           replaces_base = credentials.find { |cred| cred["type"] == "npm_registry" && cred.replaces_base? }
           if replaces_base
             registry = replaces_base["registry"]
@@ -318,22 +286,10 @@ module Dependabot
           global_rc_registries(npmrc_file, syntax: NPM_GLOBAL_REGISTRY_REGEX)
         end
 
-        sig { returns(T::Array[T::Hash[String, String]]) }
-        def yarnrc_global_registries
-          global_rc_registries(yarnrc_file, syntax: YARN_GLOBAL_REGISTRY_REGEX)
-        end
-
         sig { params(scope: String).returns(T.nilable(String)) }
         def scoped_registry(scope)
-          scoped_rc_registry = scoped_rc_registry(npmrc_file, syntax: NPM_SCOPED_REGISTRY_REGEX, scope: scope) ||
-                               scoped_rc_registry(yarnrc_file, syntax: YARN_SCOPED_REGISTRY_REGEX, scope: scope)
+          scoped_rc_registry = scoped_rc_registry(npmrc_file, syntax: NPM_SCOPED_REGISTRY_REGEX, scope: scope)
           return scoped_rc_registry if scoped_rc_registry
-
-          if parsed_yarnrc_yml
-            yarn_berry_registry = parsed_yarnrc_yml&.dig("npmScopes", scope.delete_prefix("@"), "npmRegistryServer")
-            return yarn_berry_registry if yarn_berry_registry
-          end
-
           nil
         end
 
@@ -397,16 +353,6 @@ module Dependabot
                               &.sort_by { |source| self.class.central_registry?(source[:url]) ? 1 : 0 }
 
           sources&.find { |s| s[:type] == "registry" }&.fetch(:url)
-        end
-
-        sig { returns(T.nilable(T::Hash[String, T.untyped])) }
-        def parsed_yarnrc_yml
-          yarnrc_yml_file_content = yarnrc_yml_file&.content
-          return unless yarnrc_yml_file_content
-          return @parsed_yarnrc_yml if @parsed_yarnrc_yml
-
-          @parsed_yarnrc_yml = YAML.safe_load(yarnrc_yml_file_content)
-          @parsed_yarnrc_yml
         end
 
         sig { params(url: String).returns(String) }
