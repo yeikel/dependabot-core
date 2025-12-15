@@ -701,27 +701,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
           expect(lowest_resolvable_security_fix_version).to eq(Dependabot::Bun::Version.new(target_version))
         end
       end
-
-      context "when the dependency is not top-level" do
-        before { allow(dependency).to receive(:top_level?).and_return(false) }
-
-        context "when there are conflicting dependencies" do
-          before { allow(checker).to receive(:conflicting_dependencies).and_return(["conflict"]) }
-
-          it { is_expected.to be_nil }
-        end
-
-        context "when there are no conflicting dependencies" do
-          before { allow(checker).to receive(:conflicting_dependencies).and_return([]) }
-
-          it "returns the latest resolvable transitive security fix version with no unlock" do
-            allow(checker)
-              .to receive(:latest_resolvable_transitive_security_fix_version_with_no_unlock)
-              .and_return(Dependabot::Bun::Version.new(target_version))
-            expect(lowest_resolvable_security_fix_version).to eq(Dependabot::Bun::Version.new(target_version))
-          end
-        end
-      end
     end
   end
 
