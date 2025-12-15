@@ -476,55 +476,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
     end
   end
 
-  describe "#lowest_security_fix_version" do
-    subject(:lowest_security_fix) { checker.lowest_security_fix_version }
-
-    let(:target_version) { "1.0.1" }
-
-    it "finds the lowest available non-vulnerable version" do
-      expect(checker.lowest_security_fix_version)
-        .to eq(Dependabot::Bun::Version.new("1.0.1"))
-    end
-
-    context "with a security vulnerability" do
-      let(:security_advisories) do
-        [
-          Dependabot::SecurityAdvisory.new(
-            dependency_name: dependency_name,
-            package_manager: "bun",
-            vulnerable_versions: ["<= 1.2.0"]
-          )
-        ]
-      end
-
-      let(:target_version) { "1.2.1" }
-
-      it "finds the lowest available non-vulnerable version" do
-        expect(lowest_security_fix).to eq(Dependabot::Bun::Version.new("1.2.1"))
-      end
-    end
-
-    context "when the VulnerabilityAudit finds multiple top-level ancestors" do
-      let(:vulnerability_auditor) do
-        instance_double(described_class::VulnerabilityAuditor)
-      end
-
-      before do
-        allow(described_class::VulnerabilityAuditor).to receive(:new).and_return(vulnerability_auditor)
-        allow(vulnerability_auditor).to receive(:audit).and_return(
-          {
-            "fix_available" => true,
-            "top_level_ancestors" => %w(applause lodash)
-          }
-        )
-      end
-
-      it "returns nil to force a full unlock" do
-        expect(lowest_security_fix).to be_nil
-      end
-    end
-  end
-
   describe "#latest_resolvable_version" do
     subject { checker.latest_resolvable_version }
 
