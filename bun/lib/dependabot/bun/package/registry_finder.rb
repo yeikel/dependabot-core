@@ -280,6 +280,8 @@ module Dependabot
 
           @configured_global_registry = nil
         end
+        # rubocop:enable Metrics/PerceivedComplexity
+
         sig { returns(T::Array[T::Hash[String, String]]) }
         def npmrc_global_registries
           global_rc_registries(npmrc_file, syntax: NPM_GLOBAL_REGISTRY_REGEX)
