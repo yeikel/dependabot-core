@@ -347,7 +347,7 @@ module Dependabot
         end
 
         sig { returns(T.nilable(String)) }
-        def registry_source_url # rubocop:disable Metrics/PerceivedComplexity
+        def registry_source_url
           sources = dependency&.requirements
                               &.map { |r| r.fetch(:source) }&.uniq&.compact
                               &.sort_by { |source| self.class.central_registry?(source[:url]) ? 1 : 0 }
