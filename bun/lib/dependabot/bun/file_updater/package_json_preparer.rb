@@ -21,9 +21,7 @@ module Dependabot
         def prepared_content
           content = package_json_content
           content = replace_ssh_sources(content)
-          content = remove_workspace_path_prefixes(content)
-          content = remove_invalid_characters(content)
-          content
+          remove_invalid_characters(content)
         end
 
         sig { params(content: String).returns(String) }
@@ -36,28 +34,6 @@ module Dependabot
           end
 
           updated_content
-        end
-
-        # A bug prevents Yarn recognising that a directory is part of a
-        # workspace if it is specified with a `./` prefix.
-        sig { params(content: String).returns(String) }
-        def remove_workspace_path_prefixes(content)
-          json = JSON.parse(content)
-          return content unless json.key?("workspaces")
-
-          workspace_object = json.fetch("workspaces")
-          paths_array =
-            if workspace_object.is_a?(Hash)
-              workspace_object.values_at("packages", "nohoist")
-                              .flatten.compact
-            elsif workspace_object.is_a?(Array) then workspace_object
-            else
-              raise "Unexpected workspace object"
-            end
-
-          paths_array.each { |path| path.gsub!(%r{^\./}, "") }
-
-          JSON.pretty_generate(json)
         end
 
         sig { params(content: String).returns(String) }

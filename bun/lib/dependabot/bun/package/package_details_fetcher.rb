@@ -34,9 +34,6 @@ module Dependabot
         RELEASE_PACKAGE_TYPE_NPM = "npm"
 
         REGISTRY_FILE_NPMRC = ".npmrc"
-        REGISTRY_FILE_YARNRC = ".yarnrc"
-        REGISTRY_FILE_YARNRC_YML = ".yarnrc.yml"
-
         sig do
           params(
             dependency: Dependabot::Dependency,
@@ -394,25 +391,13 @@ module Dependabot
           @registry_finder ||= Package::RegistryFinder.new(
             dependency: dependency,
             credentials: credentials,
-            npmrc_file: npmrc_file,
-            yarnrc_file: yarnrc_file,
-            yarnrc_yml_file: yarnrc_yml_file
+            npmrc_file: npmrc_file
           )
         end
 
         sig { returns(T.nilable(Dependabot::DependencyFile)) }
         def npmrc_file
           dependency_files.find { |f| f.name.end_with?(REGISTRY_FILE_NPMRC) }
-        end
-
-        sig { returns(T.nilable(Dependabot::DependencyFile)) }
-        def yarnrc_file
-          dependency_files.find { |f| f.name.end_with?(REGISTRY_FILE_YARNRC) }
-        end
-
-        sig { returns(T.nilable(Dependabot::DependencyFile)) }
-        def yarnrc_yml_file
-          dependency_files.find { |f| f.name.end_with?(REGISTRY_FILE_YARNRC_YML) }
         end
 
         sig { returns(T::Boolean) }

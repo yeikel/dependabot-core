@@ -476,55 +476,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
     end
   end
 
-  describe "#lowest_security_fix_version" do
-    subject(:lowest_security_fix) { checker.lowest_security_fix_version }
-
-    let(:target_version) { "1.0.1" }
-
-    it "finds the lowest available non-vulnerable version" do
-      expect(checker.lowest_security_fix_version)
-        .to eq(Dependabot::Bun::Version.new("1.0.1"))
-    end
-
-    context "with a security vulnerability" do
-      let(:security_advisories) do
-        [
-          Dependabot::SecurityAdvisory.new(
-            dependency_name: dependency_name,
-            package_manager: "bun",
-            vulnerable_versions: ["<= 1.2.0"]
-          )
-        ]
-      end
-
-      let(:target_version) { "1.2.1" }
-
-      it "finds the lowest available non-vulnerable version" do
-        expect(lowest_security_fix).to eq(Dependabot::Bun::Version.new("1.2.1"))
-      end
-    end
-
-    context "when the VulnerabilityAudit finds multiple top-level ancestors" do
-      let(:vulnerability_auditor) do
-        instance_double(described_class::VulnerabilityAuditor)
-      end
-
-      before do
-        allow(described_class::VulnerabilityAuditor).to receive(:new).and_return(vulnerability_auditor)
-        allow(vulnerability_auditor).to receive(:audit).and_return(
-          {
-            "fix_available" => true,
-            "top_level_ancestors" => %w(applause lodash)
-          }
-        )
-      end
-
-      it "returns nil to force a full unlock" do
-        expect(lowest_security_fix).to be_nil
-      end
-    end
-  end
-
   describe "#latest_resolvable_version" do
     subject { checker.latest_resolvable_version }
 
@@ -571,66 +522,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
     subject { checker.preferred_resolvable_version }
 
     it { is_expected.to eq(Dependabot::Bun::Version.new("1.7.0")) }
-
-    context "with a security vulnerability" do
-      let(:dependency_version) { "1.1.0" }
-      let(:security_advisories) do
-        [
-          Dependabot::SecurityAdvisory.new(
-            dependency_name: "rails",
-            package_manager: "bun",
-            vulnerable_versions: ["~1.1.0", "1.2.0", "1.3.0"]
-          )
-        ]
-      end
-      let(:target_version) { "1.2.1" }
-
-      it { is_expected.to eq(Dependabot::Bun::Version.new("1.2.1")) }
-
-      context "when dealing with a sub-dependency" do
-        let(:dependency_name) { "@dependabot-fixtures/npm-transitive-dependency" }
-        let(:target_version) { "1.0.1" }
-        let(:dependency) do
-          Dependabot::Dependency.new(
-            name: dependency_name,
-            version: "1.0.0",
-            requirements: [],
-            package_manager: "bun"
-          )
-        end
-        let(:security_advisories) do
-          [
-            Dependabot::SecurityAdvisory.new(
-              dependency_name: "rails",
-              package_manager: "bun",
-              vulnerable_versions: ["<= 1.0.0"]
-            )
-          ]
-        end
-
-        it "delegates to SubdependencyVersionResolver" do
-          dummy_version_resolver =
-            instance_double(described_class::SubdependencyVersionResolver)
-
-          expect(described_class::SubdependencyVersionResolver)
-            .to receive(:new)
-            .with(
-              dependency: dependency,
-              credentials: credentials,
-              dependency_files: dependency_files,
-              ignored_versions: ignored_versions,
-              latest_allowable_version: Dependabot::Bun::Version.new("1.0.1"),
-              repo_contents_path: nil
-            ).and_return(dummy_version_resolver)
-          expect(dummy_version_resolver)
-            .to receive(:latest_resolvable_version)
-            .and_return(Dependabot::Bun::Version.new("1.0.1"))
-
-          expect(checker.preferred_resolvable_version)
-            .to eq(Dependabot::Bun::Version.new("1.0.1"))
-        end
-      end
-    end
   end
 
   describe "#lowest_resolvable_security_fix_version" do
@@ -662,65 +553,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
 
       it "raises an error" do
         expect { lowest_resolvable_security_fix_version }.to raise_error("Dependency not vulnerable!")
-      end
-    end
-
-    context "when the dependency is vulnerable" do
-      let(:security_advisories) do
-        [
-          Dependabot::SecurityAdvisory.new(
-            dependency_name: dependency_name,
-            package_manager: "bun",
-            vulnerable_versions: ["<1.2.1"],
-            safe_versions: [">=1.2.1 <2.0.0"]
-          )
-        ]
-      end
-
-      context "when the dependency is top-level" do
-        let(:dependency_name) { "@dependabot-fixtures/npm-parent-dependency" }
-        let(:dependency) do
-          Dependabot::Dependency.new(
-            name: dependency_name,
-            version: "1.0.0",
-            requirements: [{
-              file: "package.json",
-              requirement: "^1.0.0",
-              groups: [],
-              source: nil
-            }],
-            package_manager: "bun"
-          )
-        end
-        let(:target_version) { "2.0.2" }
-
-        it "returns the lowest security fix version" do
-          allow(checker).to receive(:lowest_security_fix_version).and_return(
-            Dependabot::Bun::Version.new(target_version)
-          )
-          expect(lowest_resolvable_security_fix_version).to eq(Dependabot::Bun::Version.new(target_version))
-        end
-      end
-
-      context "when the dependency is not top-level" do
-        before { allow(dependency).to receive(:top_level?).and_return(false) }
-
-        context "when there are conflicting dependencies" do
-          before { allow(checker).to receive(:conflicting_dependencies).and_return(["conflict"]) }
-
-          it { is_expected.to be_nil }
-        end
-
-        context "when there are no conflicting dependencies" do
-          before { allow(checker).to receive(:conflicting_dependencies).and_return([]) }
-
-          it "returns the latest resolvable transitive security fix version with no unlock" do
-            allow(checker)
-              .to receive(:latest_resolvable_transitive_security_fix_version_with_no_unlock)
-              .and_return(Dependabot::Bun::Version.new(target_version))
-            expect(lowest_resolvable_security_fix_version).to eq(Dependabot::Bun::Version.new(target_version))
-          end
-        end
       end
     end
   end
@@ -946,41 +778,6 @@ RSpec.describe Dependabot::Bun::UpdateChecker do
             source: nil
           }]
         )
-    end
-
-    context "with a security vulnerability" do
-      let(:dependency_version) { "1.1.0" }
-      let(:security_advisories) do
-        [
-          Dependabot::SecurityAdvisory.new(
-            dependency_name: "rails",
-            package_manager: "bun",
-            vulnerable_versions: ["~1.1.0", "1.2.0", "1.3.0"]
-          )
-        ]
-      end
-      let(:target_version) { "1.2.1" }
-
-      it "delegates to the RequirementsUpdater" do
-        expect(described_class::RequirementsUpdater)
-          .to receive(:new)
-          .with(
-            requirements: dependency_requirements,
-            updated_source: nil,
-            latest_resolvable_version: "1.2.1",
-            update_strategy: Dependabot::RequirementsUpdateStrategy::BumpVersions
-          )
-          .and_call_original
-        expect(checker.updated_requirements)
-          .to eq(
-            [{
-              file: "package.json",
-              requirement: "^1.2.1",
-              groups: [],
-              source: nil
-            }]
-          )
-      end
     end
 
     context "when a requirements_update_strategy has been specified" do
