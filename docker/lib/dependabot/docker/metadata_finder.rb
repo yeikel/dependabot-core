@@ -21,7 +21,7 @@ module Dependabot
         return unless new_source && new_source[:registry] && new_source[:tag]
 
         image_ref = "#{new_source[:registry]}/#{dependency.name}:#{new_source[:tag]}"
-        image_details_output = SharedHelpers.run_shell_command("regctl image inspect #{image_ref}")
+        image_details_output = SharedHelpers.run_shell_command("docker buildx imagetools inspect #{image_ref} --raw")
         image_details = JSON.parse(image_details_output)
         image_source = image_details.dig("config", "Labels", "org.opencontainers.image.source")
         return unless image_source
