@@ -272,5 +272,25 @@ RSpec.describe Dependabot::RegistryClient do
         expect { described_class.get(url: "#{unreachable_url}/foos/bars") }.to raise_error(Excon::Error)
       end
     end
+
+    describe "when Excon raises a NoMethodError (e.g. nil response in air-gapped environment)" do
+      let(:error) { NoMethodError.new("undefined method '+' for nil") }
+
+      it "wraps the error as Excon::Error::Socket and caches it for get" do
+        expect(Excon).to receive(:get).with(unreachable_url, anything).once
+
+        expect { described_class.get(url: unreachable_url) }.to raise_error(Excon::Error::Socket)
+        expect { described_class.get(url: unreachable_url) }.to raise_error(Excon::Error::Socket)
+        expect { described_class.get(url: unreachable_url) }.to raise_error(Excon::Error::Socket)
+      end
+
+      it "wraps the error as Excon::Error::Socket and caches it for head" do
+        expect(Excon).to receive(:head).with(unreachable_url, anything).once
+
+        expect { described_class.head(url: unreachable_url) }.to raise_error(Excon::Error::Socket)
+        expect { described_class.head(url: unreachable_url) }.to raise_error(Excon::Error::Socket)
+        expect { described_class.head(url: unreachable_url) }.to raise_error(Excon::Error::Socket)
+      end
+    end
   end
 end

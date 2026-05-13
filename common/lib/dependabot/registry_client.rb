@@ -38,6 +38,10 @@ module Dependabot
     rescue Excon::Error::Timeout, Excon::Error::Socket => e
       cache_error(url, e) if cacheable_error?(e)
       raise e
+    rescue NoMethodError => e
+      socket_error = Excon::Error::Socket.new(e)
+      cache_error(url, socket_error)
+      raise socket_error
     end
 
     sig do
@@ -59,6 +63,10 @@ module Dependabot
     rescue Excon::Error::Timeout, Excon::Error::Socket => e
       cache_error(url, e) if cacheable_error?(e)
       raise e
+    rescue NoMethodError => e
+      socket_error = Excon::Error::Socket.new(e)
+      cache_error(url, socket_error)
+      raise socket_error
     end
 
     sig { void }
